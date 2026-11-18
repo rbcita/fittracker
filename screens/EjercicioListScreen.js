@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-// Endpoint de la API: devuelve { results: [{ name, url }, ...] }
-// Para probar el error, cambiar temporalmente por: .../pokemon/invalid-url
-const API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=30';
+// API pública de ejercicios (wger). Devuelve { results: [ ... ] }
+// language=2 pide los nombres en inglés. Para probar el error, cambiar
+// temporalmente por: https://wger.de/api/v2/exerciseinfo/invalid-url/
+const API_URL = 'https://wger.de/api/v2/exerciseinfo/?language=2&limit=20';
 
-export default function PokemonListScreen({ navigation }) {
-  const [pokemon, setPokemon] = useState([]); // datos
+export default function EjercicioListScreen({ navigation }) {
+  const [ejercicios, setEjercicios] = useState([]); // datos
   const [loading, setLoading] = useState(true); // cargando
   const [error, setError] = useState(''); // mensaje de error
 
@@ -18,7 +19,7 @@ export default function PokemonListScreen({ navigation }) {
       // fetch no falla con 404/500: hay que revisar response.ok
       if (!respuesta.ok) throw new Error(`Error HTTP ${respuesta.status}`);
       const json = await respuesta.json();
-      setPokemon(json.results);
+      setEjercicios(json.results);
     } catch (e) {
       setError(`No se pudo cargar: ${e.message}`);
     } finally {
@@ -48,29 +49,26 @@ export default function PokemonListScreen({ navigation }) {
 
   return (
     <FlatList
-      data={pokemon}
-      keyExtractor={(item) => item.name}
-      ListEmptyComponent={<Text style={styles.vacio}>No hay Pokémon para mostrar.</Text>}
-      renderItem={({ item }) => {
-        // El id es lo último de la URL (…/pokemon/25/) y sirve para la imagen
-        const id = item.url.split('/').filter(Boolean).pop();
-        return (
-          // Se envía solo el nombre; el detalle hace su propia consulta
-          <Pressable style={styles.fila} onPress={() => navigation.navigate('PokemonDetail', { name: item.name })}>
-            <Image style={styles.imagen} source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png` }} />
-            <Text style={styles.nombre}>{item.name}</Text>
-          </Pressable>
-        );
-      }}
+      data={ejercicios}
+      keyExtractor={(item) => String(item.id)}
+      ListEmptyComponent={<Text style={styles.vacio}>No hay ejercicios para mostrar.</Text>}
+      renderItem={({ item }) => (
+        // Se envía solo el id; el detalle hace su propia consulta
+        <Pressable style={styles.fila} onPress={() => navigation.navigate('EjercicioDetail', { id: item.id })}>
+          {/* El nombre está dentro de translations */}
+          <Text style={styles.nombre}>{item.translations?.[0]?.name ?? 'Sin nombre'}</Text>
+          <Text style={styles.categoria}>{item.category?.name}</Text>
+        </Pressable>
+      )}
     />
   );
 }
 
 const styles = StyleSheet.create({
   centro: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
-  fila: { flexDirection: 'row', alignItems: 'center', padding: 8, paddingHorizontal: 16, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#eee' },
-  imagen: { width: 44, height: 44, marginRight: 16 },
-  nombre: { fontSize: 16, fontWeight: 'bold', textTransform: 'capitalize' },
+  fila: { padding: 16, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#eee' },
+  nombre: { fontSize: 16, fontWeight: 'bold' },
+  categoria: { color: 'gray', marginTop: 2 },
   error: { color: '#c62828', textAlign: 'center', marginBottom: 12 },
   boton: { backgroundColor: '#1565C0', borderRadius: 8, paddingVertical: 10, paddingHorizontal: 20 },
   botonTexto: { color: '#fff', fontWeight: 'bold' },

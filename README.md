@@ -5,14 +5,14 @@ Proyecto integrador del curso Desarrollo de Aplicaciones Móviles con React Nati
 
 ## Qué incluye
 - **Semana 3:** formulario controlado, validación con mensaje de error, alta y baja de ejercicios en una lista de estado.
-- **Semana 4:** navegación con Stack (3 pantallas en `screens/`), paso de parámetros (`name`) y estado compartido desde `App.js`.
-- **Semana 5:** consumo de PokéAPI con `fetch`, `FlatList`, estados de carga y error con botón **REINTENTAR**, y pantalla de detalle.
+- **Semana 4:** navegación con Stack (3 pantallas en `screens/`), paso de parámetros (`id`) y estado compartido desde `App.js`.
+- **Semana 5:** consumo de una API pública de ejercicios (wger) con `fetch`, `FlatList`, estados de carga y error con botón **REINTENTAR**, y pantalla de detalle.
 
 ## Estructura
 - `App.js`: Stack Navigator y estado de la rutina
 - `screens/RutinaScreen.js`: formulario y lista de ejercicios
-- `screens/PokemonListScreen.js`: lista de Pokémon (API)
-- `screens/PokemonDetailScreen.js`: detalle de un Pokémon (API)
+- `screens/EjercicioListScreen.js`: catálogo de ejercicios (API wger)
+- `screens/EjercicioDetailScreen.js`: detalle de un ejercicio (API wger)
 
 ## Ejecutar
 ```bash

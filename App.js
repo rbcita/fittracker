@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RutinaScreen from './screens/RutinaScreen';
-import PokemonListScreen from './screens/PokemonListScreen';
-import PokemonDetailScreen from './screens/PokemonDetailScreen';
+import EjercicioListScreen from './screens/EjercicioListScreen';
+import EjercicioDetailScreen from './screens/EjercicioDetailScreen';
 
 // Stack = pila de pantallas: navigate() agrega una, la flecha de atrás la quita
 const Stack = createNativeStackNavigator();
@@ -24,9 +24,9 @@ export default function App() {
             <RutinaScreen {...props} ejercicios={ejercicios} onAgregar={agregar} onBorrar={borrar} />
           )}
         </Stack.Screen>
-        {/* Pantallas 2 y 3: consumen la API (PokéAPI) */}
-        <Stack.Screen name="PokemonList" component={PokemonListScreen} options={{ title: 'Pokédex' }} />
-        <Stack.Screen name="PokemonDetail" component={PokemonDetailScreen} options={{ title: 'Detalle' }} />
+        {/* Pantallas 2 y 3: consumen la API pública de ejercicios (wger) */}
+        <Stack.Screen name="EjercicioList" component={EjercicioListScreen} options={{ title: 'Catálogo' }} />
+        <Stack.Screen name="EjercicioDetail" component={EjercicioDetailScreen} options={{ title: 'Detalle' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

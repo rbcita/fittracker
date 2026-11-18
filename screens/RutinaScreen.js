@@ -56,8 +56,8 @@ export default function RutinaScreen({ navigation, ejercicios, onAgregar, onBorr
       />
 
       {/* Navega a otra pantalla del Stack */}
-      <Pressable style={styles.boton} onPress={() => navigation.navigate('PokemonList')}>
-        <Text style={styles.botonTexto}>Ver Pokédex</Text>
+      <Pressable style={styles.boton} onPress={() => navigation.navigate('EjercicioList')}>
+        <Text style={styles.botonTexto}>Ver catálogo de ejercicios</Text>
       </Pressable>
     </View>
   );
