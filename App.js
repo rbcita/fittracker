@@ -1,70 +1,33 @@
-import { useState, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StatusBar } from "expo-status-bar";
+import { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import RutinaScreen from './screens/RutinaScreen';
+import PokemonListScreen from './screens/PokemonListScreen';
+import PokemonDetailScreen from './screens/PokemonDetailScreen';
 
-import RutinaScreen from "./screens/RutinaScreen";
-import PokemonListScreen from "./screens/PokemonListScreen";
-import PokemonDetailScreen from "./screens/PokemonDetailScreen";
-
-const Tab = createBottomTabNavigator();
+// Stack = pila de pantallas: navigate() agrega una, la flecha de atrás la quita
 const Stack = createNativeStackNavigator();
 
-// Stack de la pestaña Pokédex: lista -> detalle
-function PokedexStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="PokemonList"
-        component={PokemonListScreen}
-        options={{ title: "Pokédex" }}
-      />
-      <Stack.Screen
-        name="PokemonDetail"
-        component={PokemonDetailScreen}
-        options={{ title: "Detalle" }}
-      />
-    </Stack.Navigator>
-  );
-}
-
 export default function App() {
-  // Estado compartido (Semana 3): la lista de ejercicios vive en App.js
-  const [entrenamientos, setEntrenamientos] = useState([]);
+  // La lista de ejercicios vive aquí (en App.js) para poder compartirla
+  const [ejercicios, setEjercicios] = useState([]);
 
-  useEffect(() => {
-    console.log("Entrenamientos registrados:", entrenamientos.length);
-  }, [entrenamientos]);
-
-  function agregarEntrenamiento(nuevo) {
-    setEntrenamientos([nuevo, ...entrenamientos]);
-  }
-
-  function eliminarEntrenamiento(id) {
-    setEntrenamientos(entrenamientos.filter((e) => e.id !== id));
-  }
+  const agregar = (ejercicio) => setEjercicios([ejercicio, ...ejercicios]);
+  const borrar = (id) => setEjercicios(ejercicios.filter((e) => e.id !== id));
 
   return (
     <NavigationContainer>
-      <Tab.Navigator screenOptions={{ tabBarActiveTintColor: "#1565C0" }}>
-        <Tab.Screen name="Rutina" options={{ title: "FitTracker" }}>
+      <Stack.Navigator>
+        {/* Pantalla 1: recibe la lista y las funciones como props */}
+        <Stack.Screen name="Rutina" options={{ title: 'FitTracker' }}>
           {(props) => (
-            <RutinaScreen
-              {...props}
-              entrenamientos={entrenamientos}
-              onAgregar={agregarEntrenamiento}
-              onEliminar={eliminarEntrenamiento}
-            />
+            <RutinaScreen {...props} ejercicios={ejercicios} onAgregar={agregar} onBorrar={borrar} />
           )}
-        </Tab.Screen>
-        <Tab.Screen
-          name="Pokedex"
-          component={PokedexStack}
-          options={{ headerShown: false, title: "Pokédex" }}
-        />
-      </Tab.Navigator>
-      <StatusBar style="auto" />
+        </Stack.Screen>
+        {/* Pantallas 2 y 3: consumen la API (PokéAPI) */}
+        <Stack.Screen name="PokemonList" component={PokemonListScreen} options={{ title: 'Pokédex' }} />
+        <Stack.Screen name="PokemonDetail" component={PokemonDetailScreen} options={{ title: 'Detalle' }} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
